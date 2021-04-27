@@ -1,5 +1,4 @@
 version: "2.0"
-
 nlu:
 - intent: get_current_stock_price
   examples: |
@@ -8,10 +7,21 @@ nlu:
     - what's a share of [LPSN](symbol) worth right now
     - can you tell me what [google](ticker) is trading at right now
     - give me [yahoo](ticker)
-    - what's the price of [PFFA](symbol)
+    - what's the price of [WOOF](symbol)
     - what's the price of [virtus infracap](symbol)
     - tell me what [tesla](ticker) is trading at
     - tell me what [TSLA](symbol) is trading at
+    - tell me what [NTWK](symbol) is trading at
+    - what is [ACER](symbol) trading at
+    - [FAD](symbol) please
+    - let me know what [ZEUS](symbol) is right now
+    - what is [YTRA](symbol) trading for
+    - what's [NURO](symbol) trading for
+    - what's one share of [CNET](symbol) worth
+    - what's a share of [COOP](symbol) worth
+    - what's [NOVT](symbol) worth
+    - what is [WOOF](symbol) worth
+    - what is [RMBS](symbol) worth
 - intent: greet
   examples: |
     - hey
@@ -27,7 +37,6 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
-
 - intent: goodbye
   examples: |
     - good afternoon
@@ -41,7 +50,6 @@ nlu:
     - see you around
     - bye bye
     - see you later
-
 - intent: affirm
   examples: |
     - yes
@@ -50,7 +58,6 @@ nlu:
     - of course
     - that sounds good
     - correct
-
 - intent: deny
   examples: |
     - no
@@ -60,7 +67,6 @@ nlu:
     - don't like that
     - no way
     - not really
-
 - intent: mood_great
   examples: |
     - perfect
@@ -77,7 +83,6 @@ nlu:
     - so so perfect
     - so good
     - so perfect
-
 - intent: mood_unhappy
   examples: |
     - my day was horrible
@@ -94,10 +99,12 @@ nlu:
     - extremly sad
     - so saad
     - so sad
-
 - intent: bot_challenge
   examples: |
     - are you a bot?
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+- lookup: symbol
+  examples: |
+    - data/entities/symbol.txt

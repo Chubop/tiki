@@ -28,3 +28,13 @@ stories:
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
+
+- story: interactive_story_1
+  steps:
+  - intent: get_current_stock_price
+    entities:
+    - symbol: WOOF
+
+- story: interactive_story_2
+  steps:
+  - intent: get_current_stock_price
