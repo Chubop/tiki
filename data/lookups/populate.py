@@ -33,9 +33,14 @@ write_file writes a text file to the lookups folder using an array object and a 
 """
 
 
-def write_file(file_name, array):
-    with open(file_name + '.txt', 'w') as outfile:
-        outfile.write("\n      - ".join(array))
+def write_file(file_name, array, entity_name=""):
+    # the default entity name inside the file is file_name.
+    entity_name = file_name
+
+    with open(file_name + '.yml', 'w') as outfile:
+        # TODO: fix the formatting so the first entry has a newline and a dash included as it currently does not.
+        #  also remove the weird timestamp at the bottom.
+        outfile.write("version: \"2.0\"\nnlu:\n  - lookup: " + entity_name + "\n    examples: |" + "\n      - ".join(array))
 
 
 populate_symbols()

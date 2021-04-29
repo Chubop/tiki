@@ -7,10 +7,10 @@
 
 # This is a simple example for a custom action which utters "Hello World!"
 
-# from typing import Any, Text, Dict, List
-#
-# from rasa_sdk import Action, Tracker
-# from rasa_sdk.executor import CollectingDispatcher
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
 #
 #
 # class ActionHelloWorld(Action):
@@ -25,3 +25,19 @@
 #         dispatcher.utter_message(text="Hello World!")
 #
 #         return []
+
+
+class ActionGetStockPrice(Action):
+
+    def name(self) -> Text:
+
+        return "action_get_stock_price"
+
+    async def run(
+        self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        symbol = tracker.get_slot("symbol")
+        dispatcher.utter_message(text=symbol)
+
+        return []

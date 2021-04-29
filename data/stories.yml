@@ -29,12 +29,7 @@ stories:
   - intent: deny
   - action: utter_goodbye
 
-- story: interactive_story_1
-  steps:
-  - intent: get_current_stock_price
-    entities:
-    - symbol: WOOF
-
 - story: interactive_story_2
   steps:
   - intent: get_current_stock_price
+  - action: action_get_stock_price

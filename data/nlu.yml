@@ -22,6 +22,8 @@ nlu:
     - what's [NOVT](symbol) worth
     - what is [WOOF](symbol) worth
     - what is [RMBS](symbol) worth
+    - what is [TSLA](symbol) worth
+    - tell me the cost of a share of [LPSN](symbol)
 - intent: greet
   examples: |
     - hey
