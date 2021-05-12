@@ -7,10 +7,18 @@ import urllib.request
 # has a bunch of great stock data that we can split by '|' per line
 url = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
 
+
+"""
+save_to_txt saves the request to "stock_data.txt"
+"""
+def save_to_txt():
+    file = urllib.request.urlopen(url)
+    with open('stock_data.txt', 'w') as outfile:
+        outfile.write(file.read().decode('utf-8'))
+
 """
 grabs the symbol/ticker of all the current stocks on NASDAQ.
 """
-
 
 def populate_symbols():
     file = urllib.request.urlopen(url)
@@ -43,4 +51,14 @@ def write_file(file_name, array, entity_name=""):
         outfile.write("version: \"2.0\"\nnlu:\n  - lookup: " + entity_name + "\n    examples: |" + "\n      - ".join(array))
 
 
-populate_symbols()
+def ticker_to_name(ticker):
+    with open('../data/lookups/stock_data.txt', 'r') as f:
+        stock_data = f.read()
+    for line in stock_data:
+        line_segments = line.split('|')
+        stock_ticker = line_segments[0]
+        stock_name = line_segments[1]
+        if stock_ticker == ticker:
+            return stock_name
+    raise IndexError
+
