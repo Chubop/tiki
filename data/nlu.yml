@@ -24,6 +24,58 @@ nlu:
     - what is [RMBS](symbol) worth
     - what is [TSLA](symbol) worth
     - tell me the cost of a share of [LPSN](symbol)
+- intent: get_stock_open
+  examples: |
+    - what did [AAPL](symbol) open at today
+    - what was [TSLA](symbol)'s open
+    - [NURO](symbol) open
+    - get me [LPSN](symbol)'s open
+    - can you tell me what [WOOF](symbol) opened at today
+- intent: get_stock_close
+  examples: |
+    - what did [MSFT](symbol) close at today
+    - what's [LPSN](symbol)'s close
+    - tell me what [WOOF](symbol) closed at
+    - tell me what [WOOF](symbol) close was
+    - [NVDA](symbol) close
+- intent: get_stock_high
+  examples: |
+    - what is [MSFT](symbol)'s high
+    - [AAPL](symbol) high
+    - tell me what the high was for [LPSN](symbol)
+    - what was [NURO](symbol)'s high today
+    - what was the high today for [AMD](symbol)
+- intent: get_stock_low
+  examples: |
+    - what is [MSFT](symbol)'s low
+    - [AAPL](symbol) low
+    - tell me what the low was for [LPSN](symbol)
+    - what was [NURO](symbol)'s high low
+    - what was the low today for [AMD](symbol)
+- intent: get_stock_volume
+  examples: |
+    - what's [XONE](symbol)'s volume
+    - [MSFT](symbol) volume
+    - what is [MSFT](symbol)'s trading volume
+    - what's the volume for [GOOG](symbol)
+    - can you tell me the volume for [WOOF](symbol)
+- intent: get_stock_news
+  examples: |
+    - [MSFT](symbol) news
+    - what's the recent news on [AAPL](symbol)
+    - whats the buzz with [NVDA](symbol)
+    - what are people saying about [LPSN](symbol)
+- intent: get_next_holiday
+  examples: |
+    - when's the next holiday?
+    - when is the next market holiday?
+    - can you tell me when the next market holiday is?
+    - next market holiday
+    - tell me when the next market holiday is?
+    - when are we getting a day off?
+- intent: get_next_earnings_call
+  examples: |
+
 - intent: greet
   examples: |
     - hey

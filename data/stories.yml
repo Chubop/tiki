@@ -29,7 +29,47 @@ stories:
   - intent: deny
   - action: utter_goodbye
 
-- story: interactive_story_2
+- story: get stock price
   steps:
   - intent: get_current_stock_price
   - action: action_get_stock_price
+
+- story: get stock open value
+  steps:
+    - intent: get_stock_open
+    - action: action_get_stock_open
+
+- story: get stock close
+  steps:
+    - intent: get_stock_close
+    - action: action_get_stock_close
+
+- story: get stock high
+  steps:
+    - intent: get_stock_high
+    - action: action_get_stock_high
+
+- story: get stock low
+  steps:
+    - intent: get_stock_low
+    - action: action_get_stock_low
+
+- story: get stock volume
+  steps:
+    - intent: get_stock_volume
+    - action: action_get_stock_volume
+
+- story: get next market holiday
+  steps:
+    - intent: get_next_holiday
+    - action: action_get_next_holiday
+
+- story: get stock news
+  steps:
+    - intent: get_stock_news
+    - action: action_get_stock_news
+
+- story: get next earnings call
+  steps:
+    - intent: get_next_earnings_call
+    - action: action_get_next_earnings_call

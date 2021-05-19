@@ -47,7 +47,7 @@ def write_file(file_name, array, entity_name=""):
 
     with open(file_name + '.yml', 'w') as outfile:
         # TODO: fix the formatting so the first entry has a newline and a dash included as it currently does not.
-        #  also remove the weird timestamp at the bottom.
+        # also remove the weird timestamp at the bottom.
         outfile.write("version: \"2.0\"\nnlu:\n  - lookup: " + entity_name + "\n    examples: |" + "\n      - ".join(array))
 
 
