@@ -8,16 +8,21 @@
 # This is a simple example for a custom action which utters "Hello World!"
 
 from typing import Any, Text, Dict, List
+from alpaca_trade_api.rest import REST, TimeFrame
 import requests
 from rasa_sdk import Action, Tracker
 from newsapi import NewsApiClient
 import datetime
+import os
 from yahoo_earnings_calendar import YahooEarningsCalendar
 from rasa_sdk.executor import CollectingDispatcher
 
 # news api init
 newsapi = NewsApiClient(api_key='5e3e6d6c0ebe4d73a178b1d54f299ac0')
 
+APCA_API_KEY_ID = "PKAMMMOBO10KSVX8VN7C"
+APCA_API_SECRET_KEY = "5UQi7mYaLm7NK5hVbVLPzAlEhKDOqqey6JkmZzzI"
+APCA_API_BASE_URL = "https://paper-api.alpaca.markets"
 """
 ticker to name takes a ticker 'AAPL' and returns the market name 'Apple Inc.'
 """

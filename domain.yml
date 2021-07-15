@@ -4,6 +4,13 @@ session_config:
   carry_over_slots_to_new_session: true
 intents:
 - get_current_stock_price
+- get_stock_news
+- get_stock_open
+- get_stock_close
+- get_stock_high
+- get_stock_low
+- get_stock_volume
+- get_next_holiday
 - greet
 - goodbye
 - affirm
@@ -34,3 +41,10 @@ responses:
   - text: oh i've got a peen
 actions:
 - action_get_stock_price
+- action_get_stock_open
+- action_get_stock_close
+- action_get_stock_high
+- action_get_stock_low
+- action_get_stock_volume
+- action_get_next_holiday
+- action_get_stock_news
