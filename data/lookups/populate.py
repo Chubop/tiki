@@ -11,14 +11,18 @@ url = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
 """
 save_to_txt saves the request to "stock_data.txt"
 """
+
+
 def save_to_txt():
     file = urllib.request.urlopen(url)
     with open('stock_data.txt', 'w') as outfile:
         outfile.write(file.read().decode('utf-8'))
 
+
 """
 grabs the symbol/ticker of all the current stocks on NASDAQ.
 """
+
 
 def populate_symbols():
     file = urllib.request.urlopen(url)

@@ -14,15 +14,19 @@ from rasa_sdk import Action, Tracker
 from newsapi import NewsApiClient
 import datetime
 import os
+import pandas
 from yahoo_earnings_calendar import YahooEarningsCalendar
 from rasa_sdk.executor import CollectingDispatcher
 
 # news api init
 newsapi = NewsApiClient(api_key='5e3e6d6c0ebe4d73a178b1d54f299ac0')
 
-APCA_API_KEY_ID = "PKAMMMOBO10KSVX8VN7C"
-APCA_API_SECRET_KEY = "5UQi7mYaLm7NK5hVbVLPzAlEhKDOqqey6JkmZzzI"
-APCA_API_BASE_URL = "https://paper-api.alpaca.markets"
+os.environ["APCA_API_KEY_ID"] = "PKAMMMOBO10KSVX8VN7C"
+os.environ["APCA_API_SECRET_KEY"] = "5UQi7mYaLm7NK5hVbVLPzAlEhKDOqqey6JkmZzzI"
+os.environ["APCA_API_BASE_URL"] = "https://paper-api.alpaca.markets"
+
+apca = REST()
+
 """
 ticker to name takes a ticker 'AAPL' and returns the market name 'Apple Inc.'
 """
@@ -102,6 +106,23 @@ def convert_date_format(date):
     return month + " " + day + ", " + year_num
 
 
+class ActionGetPercentChange(Action):
+    def name(self) -> Text:
+        return "action_get_percent_change"
+
+    async def run(
+            self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+        symbol = tracker.get_slot("symbol")
+        time = tracker.get_slot("time")
+        # get daily price data for AAPL over the last X trading days.
+        # barset = apca.get_barset(symbol, '')
+
+        # dispatcher.utter_message(time)
+
+        return []
+
+
 class ActionGetStockPrice(Action):
 
     def name(self) -> Text:
@@ -158,7 +179,9 @@ class ActionGetStockOpen(Action):
             url=URL)
         data = resp.json()
 
-        txt = symbol + " opened today at " + str(data['results'][0]['o'])
+        open_value = apca.get_barset(symbol, "minute", limit=10)[symbol][0].o
+
+        txt = symbol + " opened today at " + str(open_value)
         dispatcher.utter_message(text=txt)
 
         return []

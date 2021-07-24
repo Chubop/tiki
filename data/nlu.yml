@@ -1,5 +1,13 @@
 version: "2.0"
 nlu:
+- intent: get_percent_change
+  examples: |
+    - tell me [AAPL](symbol)'s change since yesterday
+    - how much did [NVDA](symbol) change from five days ago?
+    - how much did [TSLA](symbol) move since ten days ago?
+    - tell me how much [NOVT](symbol) moved since last month
+    - show me [NTWK](symbol)'s change since last year
+    - what did [RMBS](symbol) change since three months ago?
 - intent: get_current_stock_price
   examples: |
     - what is [AAPL](symbol)
@@ -73,9 +81,6 @@ nlu:
     - next market holiday
     - tell me when the next market holiday is?
     - when are we getting a day off?
-- intent: get_next_earnings_call
-  examples: |
-
 - intent: greet
   examples: |
     - hey

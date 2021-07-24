@@ -73,3 +73,9 @@ stories:
   steps:
     - intent: get_next_earnings_call
     - action: action_get_next_earnings_call
+
+- story: get percent change
+  steps:
+    - intent: get_percent_change
+    - action: action_get_percent_change
+

@@ -11,6 +11,7 @@ intents:
 - get_stock_low
 - get_stock_volume
 - get_next_holiday
+- get_percent_change
 - greet
 - goodbye
 - affirm
@@ -21,8 +22,11 @@ intents:
 slots:
   symbol:
     type: text
+  time:
+    type: any
 entities:
 - symbol
+- time
 responses:
   utter_greet:
   - text: Hey! How are you?
@@ -48,3 +52,5 @@ actions:
 - action_get_stock_volume
 - action_get_next_holiday
 - action_get_stock_news
+- action_get_percent_change
+- action_get_next_earnings_call
