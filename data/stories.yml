@@ -79,3 +79,8 @@ stories:
     - intent: get_percent_change
     - action: action_get_percent_change
 
+- story: buy stock
+  steps:
+    - intent: buy_stock
+    - action: action_buy_stock
+

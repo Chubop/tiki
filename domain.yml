@@ -4,6 +4,7 @@ session_config:
   carry_over_slots_to_new_session: true
 intents:
 - get_current_stock_price
+- buy_stock
 - get_stock_news
 - get_stock_open
 - get_stock_close
@@ -54,3 +55,4 @@ actions:
 - action_get_stock_news
 - action_get_percent_change
 - action_get_next_earnings_call
+- action_buy_stock

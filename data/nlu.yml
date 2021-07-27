@@ -1,5 +1,9 @@
 version: "2.0"
 nlu:
+- intent: buy_stock
+  examples: |
+    - purchase some [LPSN](symbol)
+    - please put in a buy order for 1 share of [AAPL](symbol)
 - intent: get_percent_change
   examples: |
     - tell me [AAPL](symbol)'s change since yesterday
