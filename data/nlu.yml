@@ -4,6 +4,8 @@ nlu:
   examples: |
     - purchase some [LPSN](symbol)
     - please put in a buy order for 1 share of [AAPL](symbol)
+    - place a buy order for ten shares of [DIS](symbol)
+    - buy 50 [NVDA](symbol)
 - intent: get_percent_change
   examples: |
     - tell me [AAPL](symbol)'s change since yesterday

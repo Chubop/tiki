@@ -316,8 +316,9 @@ class ActionBuyStock(Action):
             self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         symbol = tracker.get_slot('symbol')
+        number = tracker.get_slot('number')
 
-        first_msg = 'Putting in a BUY order on ticker ' + symbol + '...'
+        first_msg = 'Putting in a BUY order on ticker ' + symbol + 'for ' + str(number) + ' orders...'
         dispatcher.utter_message(text=first_msg)
         apca.submit_order(symbol=symbol, qty=1, side='buy', type='market', time_in_force='day')
         last_msg = 'Success'

@@ -25,9 +25,12 @@ slots:
     type: text
   time:
     type: any
+  number:
+    type: any
 entities:
 - symbol
 - time
+- number
 responses:
   utter_greet:
   - text: Hey! How are you?
