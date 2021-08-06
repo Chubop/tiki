@@ -1,11 +1,31 @@
 version: "2.0"
 nlu:
+- intent: check_account_balance
+  examples: |
+    - whats my account balance
+    - how much buying power do i have
+    - whats my balance
+    - how much do i have in liquid
+    - whats my cash balance
+    - how much money do i have
+    - current account balance
+    - whats my accounts balance
+    - what is my account balance
+    - tell me my account balance
+    - account balance
+    - how much money is in my account
 - intent: buy_stock
   examples: |
     - purchase some [LPSN](symbol)
     - please put in a buy order for 1 share of [AAPL](symbol)
     - place a buy order for ten shares of [DIS](symbol)
     - buy 50 [NVDA](symbol)
+- intent: buy_stock_for_cash
+  examples: |
+    - purchase $1000 of [LPSN](symbol)
+    - please put in a buy order for $50 worth of [AAPL](symbol)
+    - place a buy order for $1230 of [DIS](symbol)
+    - buy $320 [NVDA](symbol)
 - intent: get_percent_change
   examples: |
     - tell me [AAPL](symbol)'s change since yesterday

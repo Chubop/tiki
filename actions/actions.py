@@ -10,6 +10,7 @@
 from typing import Any, Text, Dict, List
 from alpaca_trade_api.rest import REST, TimeFrame
 import requests
+from fuzzywuzzy import process
 from rasa_sdk import Action, Tracker
 from newsapi import NewsApiClient
 import datetime
@@ -33,7 +34,7 @@ ticker to name takes a ticker 'AAPL' and returns the market name 'Apple Inc.'
 
 
 def ticker_to_name(ticker):
-    with open('../data/lookups/stock_data.txt', 'r') as f:
+    with open(os.path.abspath('../ticki-fixed/data/lookups/stock_data.txt'), 'r') as f:
         stock_data = f.read()
     for line in stock_data:
         line_segments = line.split('|')
@@ -153,14 +154,23 @@ class ActionGetStockNews(Action):
             self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         symbol = tracker.get_slot("symbol")
+        r = requests.get('https://api.iextrading.com/1.0/ref-data/symbols')
+        stock_list = r.json()
+        company_name = process.extractOne(symbol, stock_list)[0]['name'].split(' ')[0]
 
-        top_headlines = newsapi.get_top_headlines(q=symbol,
-                                                  sources='google-news, business-insider, cbs-news, wired',
+        top_headlines = newsapi.get_top_headlines(q=company_name,
                                                   category='business',
-                                                  language='en',
-                                                  country='us')
-
-        dispatcher.utter_message(text=str(top_headlines))
+                                                  language='en')
+        if top_headlines['totalResults'] == 0:
+            dispatcher.utter_message(text='No recent news.')
+        else:
+            ret = ""
+            i = 1
+            for article in top_headlines['articles']:
+                if i < 6:
+                    ret += str(i) + '. ' + article['title'] + ' ' + article['url'] + '\n'
+                    i += 1
+            dispatcher.utter_message(text=ret)
 
         return []
 
@@ -318,8 +328,49 @@ class ActionBuyStock(Action):
         symbol = tracker.get_slot('symbol')
         number = tracker.get_slot('number')
 
-        first_msg = 'Putting in a BUY order on ticker ' + symbol + 'for ' + str(number) + ' orders...'
+        first_msg = 'Putting in a BUY order on ticker ' + symbol + ' for ' + str(number) + ' orders...'
         dispatcher.utter_message(text=first_msg)
-        apca.submit_order(symbol=symbol, qty=1, side='buy', type='market', time_in_force='day')
+        apca.submit_order(symbol=symbol, qty=number, side='buy', type='market', time_in_force='day')
         last_msg = 'Success'
+        dispatcher.utter_message(last_msg)
+
+        return []
+
+
+class ActionCheckAccountBalance(Action):
+
+    def name(self) -> Text:
+        return "action_check_account_balance"
+
+    async def run(
+            self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        account = apca.get_account()
+        if account.trading_blocked:
+            dispatcher.utter_message('WARNING: Account is currently restricted from trading.')
+        dispatcher.utter_message('${} is available as buying power.'.format(account.buying_power))
+
+        return []
+
+
+class ActionBuyStockForCash(Action):
+
+    def name(self) -> Text:
+        return "action_buy_stock_for_cash"
+
+    async def run(
+            self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        symbol = tracker.get_slot('symbol')
+        cash = tracker.get_slot('amount-of-money')
+
+        first_msg = 'Putting in a BUY order on ticker ' + symbol + ' for ' + str(cash) + '...'
+        dispatcher.utter_message(text=first_msg)
+        apca.get_quotes(symbol, "2021-02-08", limit=1).df
+        apca.submit_order(symbol=symbol, qty=number, side='buy', type='market', time_in_force='day')
+        last_msg = 'Success'
+        dispatcher.utter_message(last_msg)
+
         return []

@@ -84,3 +84,7 @@ stories:
     - intent: buy_stock
     - action: action_buy_stock
 
+- story: check account balance
+  steps:
+    - intent: check_account_balance
+    - action: action_check_account_balance

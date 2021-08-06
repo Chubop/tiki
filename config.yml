@@ -27,13 +27,11 @@ pipeline:
      threshold: 0.3
      ambiguity_threshold: 0.1
    - name: DucklingEntityExtractor
-     # url of the running duckling server
-     url: "localhost:8000"
-     # dimensions to extract
-     dimensions: ["time", "number", "amount-of-money"]
-     # allows you to configure the locale, by default the language is
-     # used
-     timeout: 90
+     url: http://localhost:8000
+     dimensions:
+     - amount-of-money
+     - time
+     - number
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/

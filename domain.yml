@@ -4,6 +4,7 @@ session_config:
   carry_over_slots_to_new_session: true
 intents:
 - get_current_stock_price
+- check_account_balance
 - buy_stock
 - get_stock_news
 - get_stock_open
@@ -48,6 +49,7 @@ responses:
   utter_peen:
   - text: oh i've got a peen
 actions:
+- action_check_account_balance
 - action_get_stock_price
 - action_get_stock_open
 - action_get_stock_close
