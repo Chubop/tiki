@@ -3,9 +3,12 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 intents:
+- sell_stock
+- sell_stock_for_cash
 - get_current_stock_price
 - check_account_balance
 - buy_stock
+- buy_stock_for_cash
 - get_stock_news
 - get_stock_open
 - get_stock_close
@@ -28,13 +31,18 @@ slots:
     type: any
   number:
     type: any
+  amount-of-money:
+    type: any
 entities:
 - symbol
 - time
+- amount-of-money
 - number
 responses:
   utter_greet:
   - text: Hey! How are you?
+  - text: Hi! I'm the custom channel greeting.
+    channel: myio
   utter_cheer_up:
   - text: 'Here is something to cheer you up:'
     image: https://i.imgur.com/nGF1K8f.jpg
@@ -61,3 +69,6 @@ actions:
 - action_get_percent_change
 - action_get_next_earnings_call
 - action_buy_stock
+- action_buy_stock_for_cash
+- action_sell_stock
+- action_sell_stock_for_cash

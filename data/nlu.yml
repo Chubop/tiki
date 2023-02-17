@@ -16,16 +16,69 @@ nlu:
     - how much money is in my account
 - intent: buy_stock
   examples: |
-    - purchase some [LPSN](symbol)
+    - purchase 10 [LPSN](symbol)
     - please put in a buy order for 1 share of [AAPL](symbol)
     - place a buy order for ten shares of [DIS](symbol)
     - buy 50 [NVDA](symbol)
+    - get me 50 [FB](symbol)
+    - buy 100 [DIS](symbol)
+    - buy 481 shares of [MSFT](symbol)
+    - could you buy me 92 shares of [HOOD](symbol)
+    - please pick up 493 shares of [LPSN](symbol)
+    - could you buy 38 shares of [NVDA](symbol)
+    - pick up 19 shares of [AMZN](symbol)
+    - please buy 39 shares of [TSLA](symbol)
+    - buy 39 shares of [JNJ](symbol)
+    - go and buy 391 [V](symbol) shares
+    - please buy me 10 [PG](symbol) shares
 - intent: buy_stock_for_cash
   examples: |
+    - could you get me $10 worth of [JNJ](symbol)
+    - get me $14,192 worth of [DIS](symbol) shares
     - purchase $1000 of [LPSN](symbol)
+    - buy as many shares of [V](symbol) with $3,800 as you can
+    - go and buy $400 worth of [FB](symbol)
+    - please buy $1,391 of [TSLA](symbol)
+    - buy $391 of [DIS](symbol)
+    - could you buy as many shares of [V](symbol) with $3,800 as you can?
     - please put in a buy order for $50 worth of [AAPL](symbol)
     - place a buy order for $1230 of [DIS](symbol)
     - buy $320 [NVDA](symbol)
+    - put in an order for $910 of [SPY](symbol)
+    - could you buy me $9,300 worth of [MSFT](symbol)
+- intent: sell_stock
+  examples: |
+    - please go sell 45 [NVDA](symbol) shares
+    - go sell 838 shares of [V](symbol)
+    - sell 50 [NVDA](symbol)
+    - please sell 39[PG](symbol) shares
+    - go and sell 391 [V](symbol) shares
+    - could you sell 38 shares of [NVDA](symbol)
+    - sell 2,301 [HOOD](symbol)
+    - please sell 493 shares of [LPSN](symbol)
+    - please sell 39 shares of [TSLA](symbol)
+    - sell me 50 [FB](symbol)
+    - sell 193 shares of [DIS](symbol)
+    - can you sell 39 shares of [AAPL](symbol)
+    - sell 30 [MSFT](symbol)
+    - put in an order to sell 100 shares of [NTWK](symbol)
+    - liquidate 50 shares of [RMBS](symbol)
+- intent: sell_stock_for_cash
+  examples: |
+    - could you sell $10 worth of [JNJ](symbol)
+    - sell me $14,192 worth of my [DIS](symbol) shares
+    - sell $1000 of my [LPSN](symbol)
+    - sell as many shares of [V](symbol) with $3,800 as you can
+    - go and sell $400 worth of [FB](symbol)
+    - please sell $1,391 of [TSLA](symbol)
+    - sell $391 of [DIS](symbol)
+    - could you sell as many shares of [V](symbol) for $3,800?
+    - please put in a sell order for $50 worth of [AAPL](symbol)
+    - place a sell order for $1230 of [DIS](symbol)
+    - sell $320 [NVDA](symbol)
+    - put in an order to sell $910 [SPY](symbol)
+    - put in a sell order for $910 of [SPY](symbol)
+    - could you sell $9,300 worth of [MSFT](symbol)
 - intent: get_percent_change
   examples: |
     - tell me [AAPL](symbol)'s change since yesterday

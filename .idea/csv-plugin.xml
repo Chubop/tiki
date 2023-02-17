@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\custom_channel.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\entities\symbol.txt">
           <value>
             <Attribute>

@@ -2,6 +2,7 @@ from typing import Any, Text, Dict, List
 from alpaca_trade_api.rest import REST, TimeFrame
 from alpaca_trade_api.stream import Stream
 from tabulate import tabulate
+import datetime
 import requests
 from rasa_sdk import Action, Tracker
 from newsapi import NewsApiClient
@@ -41,13 +42,42 @@ os.environ["APCA_API_SECRET_KEY"] = "5UQi7mYaLm7NK5hVbVLPzAlEhKDOqqey6JkmZzzI"
 os.environ["APCA_API_BASE_URL"] = "https://paper-api.alpaca.markets"
 
 apca = REST()
-start = pd.Timestamp('2021-08-03 9:30', tz='America/New_York').isoformat()
-end = pd.Timestamp('2021-08-03 16:00', tz='America/New_York').isoformat()
+
+# if it's a weekend, set "start" to Friday.
+# TODO: holiday support
+weekno = datetime.datetime.today().weekday()
+
+# weekday
+start_timestamp = pd.Timestamp.now()
+
+if weekno < 5:
+    start_timestamp = start_timestamp.replace(hour=9, minute=30)
+elif weekno == 6:
+    today = start_timestamp.day
+    start_timestamp = start_timestamp.replace(hour=9, minute=30, day=(today - 2))
+elif weekno == 5:
+    today = start_timestamp.day
+    start_timestamp = start_timestamp.replace(hour=9, minute=30, day=(today - 1))
+
+end_timestamp = pd.Timestamp.now()
+
+timezone = 'America/New_York'
+freq = 'T'
+start = pd.Timestamp(start_timestamp, tz=timezone)
+start.round(freq=freq)
+
+start.replace(hour=9, minute=30)
+start = start.isoformat()
+
+end = pd.Timestamp(end_timestamp, tz=timezone)
+end.round(freq=freq)
+
+end = end.isoformat()
+
 barset_df = apca.get_barset(['LPSN'], 'minute', start=start, end=end).df
+barset_df.columns = barset_df.columns.map(lambda t: t[1])
 print(tabulate(barset_df, headers='keys', tablefmt='psql'))
-# print(barset_df._get_value(index='2021-08-02 13:44:00-04:00', col='(\'LPSN\', \'high\')'))
-for col in barset_df.columns:
-    if col[0] == ['LPSN', 'close'
-                          '']:
-        print('yippie')
-    print(str(col))
+
+# print(barset_df['open']['2021-08-20 15:59:00-04:00'])
+val = barset_df.iloc[-1:]['close'][0]
+print(val)

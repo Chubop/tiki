@@ -10,6 +10,8 @@
 from typing import Any, Text, Dict, List
 from alpaca_trade_api.rest import REST, TimeFrame
 import requests
+from math import floor
+from tabulate import tabulate
 from fuzzywuzzy import process
 from rasa_sdk import Action, Tracker
 from newsapi import NewsApiClient
@@ -107,6 +109,82 @@ def convert_date_format(date):
     return month + " " + day + ", " + year_num
 
 
+"""
+get_stock_dataframe returns a pandas dataframe of a given stock.
+"""
+
+
+def get_stock_dataframe(ticker):
+    # if it's a weekend, set "start" to Friday.
+    # TODO: holiday support
+    weekno = datetime.datetime.today().weekday()
+
+    # weekday
+    start_timestamp = pandas.Timestamp.now()
+
+    if weekno < 5:
+        start_timestamp = start_timestamp.replace(hour=9, minute=30)
+    elif weekno == 6:
+        today = start_timestamp.day
+        start_timestamp = start_timestamp.replace(hour=9, minute=30, day=(today - 2))
+    elif weekno == 5:
+        today = start_timestamp.day
+        start_timestamp = start_timestamp.replace(hour=9, minute=30, day=(today - 1))
+
+    end_timestamp = pandas.Timestamp.now()
+
+    timezone = 'America/New_York'
+    freq = 'T'
+    start = pandas.Timestamp(start_timestamp, tz=timezone)
+    start.round(freq=freq)
+
+    start.replace(hour=9, minute=30)
+    start = start.isoformat()
+
+    end = pandas.Timestamp(end_timestamp, tz=timezone)
+    end.round(freq=freq)
+
+    end = end.isoformat()
+
+    barset_df = apca.get_barset([ticker], 'minute', start=start, end=end).df
+    barset_df.columns = barset_df.columns.map(lambda t: t[1])
+    # print(tabulate(barset_df, headers='keys', tablefmt='psql'))
+    # print(barset_df['open']['2021-08-20 15:59:00-04:00'])
+
+    return barset_df
+    # val = barset_df.iloc[-1:]['close'][0]
+    # return val
+
+
+"""
+get_stock_action_now returns data from a given ticker.
+
+ticker: str, name of a ticker
+action: open, close, volume, high, low
+"""
+
+
+def get_stock_action_now(ticker, action='close'):
+    df = get_stock_dataframe(ticker)
+    return df.iloc[-1:][action][0]
+
+
+"""
+commaize adds commas to long numbers. i.e. 1000 => 1,000.
+"""
+
+
+def commaize(number):
+    num = int(number)
+    return str("{:,}".format(num))
+
+
+"""
+planned: GetPercentChange determines the percent change
+of a given stock from two dates.
+"""
+
+
 class ActionGetPercentChange(Action):
     def name(self) -> Text:
         return "action_get_percent_change"
@@ -133,13 +211,10 @@ class ActionGetStockPrice(Action):
             self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         symbol = tracker.get_slot("symbol")
-        URL = 'https://api.polygon.io/v2/aggs/ticker/' + symbol + '/prev?unadjusted=true&apiKey=9WYssjnea_WC1CUJY6rPNFrytFSE129G'
-        resp = requests.get(
-            url=URL)
-        data = resp.json()
+        stock_now = get_stock_action_now(symbol)
 
         # txt = symbol + " opened today at " + str(data['results'][0]['o'])
-        txt = 'currently disabled.'
+        txt = f'{symbol} is at ${stock_now}.'
         dispatcher.utter_message(text=txt)
 
         return []
@@ -191,7 +266,7 @@ class ActionGetStockOpen(Action):
 
         open_value = apca.get_barset(symbol, "minute", limit=10)[symbol][0].o
 
-        txt = symbol + " opened today at " + str(open_value)
+        txt = f'{symbol} opened at ${str(commaize(open_value))}.'
         dispatcher.utter_message(text=txt)
 
         return []
@@ -210,8 +285,9 @@ class ActionGetStockClose(Action):
         resp = requests.get(
             url=URL)
         data = resp.json()
+        close = data['results'][0]['c']
+        txt = f'{symbol} closed at ${str(commaize(close))}.'
 
-        txt = symbol + " closed today at " + str(data['results'][0]['c'])
         dispatcher.utter_message(text=txt)
 
         return []
@@ -231,7 +307,9 @@ class ActionGetStockHigh(Action):
             url=URL)
         data = resp.json()
 
-        txt = symbol + "'s high today is " + str(data['results'][0]['h'])
+        high = data['results'][0]['h']
+
+        txt = f'{symbol}\'s high is ${str(commaize(high))}.'
         dispatcher.utter_message(text=txt)
 
         return []
@@ -251,7 +329,9 @@ class ActionGetStockLow(Action):
             url=URL)
         data = resp.json()
 
-        txt = symbol + "'s low today is " + str(data['results'][0]['l'])
+        low = data['results'][0]['l']
+
+        txt = f'{symbol}\'s low is ${str(commaize(low))}.'
         dispatcher.utter_message(text=txt)
 
         return []
@@ -291,7 +371,9 @@ class ActionGetStockVolume(Action):
             url=URL)
         data = resp.json()
 
-        txt = symbol + " has a volume of " + str(data['results'][0]['v'])
+        volume = data['results'][0]['v']
+
+        txt = f'{symbol}\'s volume is {str(commaize(volume))} shares.'
         dispatcher.utter_message(text=txt)
 
         return []
@@ -328,10 +410,10 @@ class ActionBuyStock(Action):
         symbol = tracker.get_slot('symbol')
         number = tracker.get_slot('number')
 
-        first_msg = 'Putting in a BUY order on ticker ' + symbol + ' for ' + str(number) + ' orders...'
+        first_msg = f'Purchasing {str(number)} shares of {symbol}...'
         dispatcher.utter_message(text=first_msg)
         apca.submit_order(symbol=symbol, qty=number, side='buy', type='market', time_in_force='day')
-        last_msg = 'Success'
+        last_msg = f'Successfully purchased {str(number)} shares.'
         dispatcher.utter_message(last_msg)
 
         return []
@@ -345,11 +427,54 @@ class ActionCheckAccountBalance(Action):
     async def run(
             self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-
         account = apca.get_account()
         if account.trading_blocked:
             dispatcher.utter_message('WARNING: Account is currently restricted from trading.')
-        dispatcher.utter_message('${} is available as buying power.'.format(account.buying_power))
+        dispatcher.utter_message(text=f'${commaize(float(account.buying_power))} is available as buying power.')
+
+        return []
+
+
+class ActionSellStock(Action):
+
+    def name(self) -> Text:
+        return "action_sell_stock"
+
+    async def run(
+            self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+        symbol = tracker.get_slot('symbol')
+        number = tracker.get_slot('number')
+
+        first_msg = f'Selling {str(number)} shares of {symbol}...'
+        dispatcher.utter_message(text=first_msg)
+        apca.submit_order(symbol=symbol, qty=number, side='sell', type='market', time_in_force='day')
+        last_msg = f'Successfully sold {str(number)} shares.'
+        dispatcher.utter_message(last_msg)
+
+        return []
+
+
+class ActionSellStockForCash(Action):
+
+    def name(self) -> Text:
+        return "action_sell_stock_for_cash"
+
+    async def run(
+            self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+        symbol = tracker.get_slot('symbol')
+        cash = tracker.get_slot('amount-of-money')
+
+        stock_close_now = get_stock_action_now(symbol, action='close')
+        number = floor(int(cash) / int(stock_close_now))
+
+        first_msg = f'Selling {number} {symbol} shares worth ${str(cash)}...'
+        dispatcher.utter_message(text=first_msg)
+
+        apca.submit_order(symbol=symbol, qty=number, side='buy', type='market', time_in_force='day')
+        last_msg = f'Successfully sold {number} shares.'
+        dispatcher.utter_message(last_msg)
 
         return []
 
@@ -362,15 +487,17 @@ class ActionBuyStockForCash(Action):
     async def run(
             self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-
         symbol = tracker.get_slot('symbol')
         cash = tracker.get_slot('amount-of-money')
 
-        first_msg = 'Putting in a BUY order on ticker ' + symbol + ' for ' + str(cash) + '...'
+        stock_close_now = get_stock_action_now(symbol, action='close')
+        number = floor(int(cash) / int(stock_close_now))
+
+        first_msg = f'Purchasing {number} {symbol} shares for ${str(cash)}...'
         dispatcher.utter_message(text=first_msg)
-        apca.get_quotes(symbol, "2021-02-08", limit=1).df
+
         apca.submit_order(symbol=symbol, qty=number, side='buy', type='market', time_in_force='day')
-        last_msg = 'Success'
+        last_msg = f'Successfully purchased {number} shares.'
         dispatcher.utter_message(last_msg)
 
         return []
